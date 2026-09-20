@@ -36,6 +36,40 @@ Without an LLM, the bot uses a deterministic local formatter and preserves the f
 
 Requirements: Python 3.11 or newer and a Telegram bot that is an administrator of the target channel.
 
+### Install as an application
+
+The recommended installation uses [pipx](https://pipx.pypa.io/), which keeps the application isolated and exposes the `nextlevel` command globally:
+
+If `pipx` is not installed yet, install it once with `py -m pip install --user pipx` on Windows or your operating system's package manager.
+
+```bash
+pipx install https://github.com/Samopal88/nextlevel/archive/refs/heads/main.zip
+nextlevel setup
+```
+
+The interactive setup asks for the BotFather token, channel ID, timezone, and posting times. It verifies the bot and its administrator access without publishing anything, saves the configuration outside the source code, and can enable automatic startup.
+
+The two unavoidable Telegram steps are:
+
+1. Create a bot with [@BotFather](https://t.me/BotFather) and copy its token.
+2. Add that bot to the target channel as an administrator with permission to post.
+
+Useful commands:
+
+```bash
+nextlevel preview             # build posts without publishing
+nextlevel once                # publish one batch and exit
+nextlevel run                 # run the foreground scheduler
+nextlevel check               # validate saved settings
+nextlevel config-path         # show where settings are stored
+nextlevel autostart-enable    # enable background startup
+nextlevel autostart-disable   # remove background startup
+```
+
+Update or uninstall the application with `pipx upgrade nextlevel-telegram-bot` and `pipx uninstall nextlevel-telegram-bot`.
+
+### Run from source
+
 ```bash
 git clone https://github.com/Samopal88/nextlevel.git
 cd nextlevel
@@ -65,6 +99,8 @@ python bot.py
 ```
 
 On Windows PowerShell, activate the virtual environment with `.venv\Scripts\Activate.ps1`.
+
+The installed application supports Windows Task Scheduler, Linux systemd user services, and macOS LaunchAgents for automatic startup. No administrator/root account is required in the normal case.
 
 ## Configuration
 
