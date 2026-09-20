@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Next Level: scheduled Telegram posts from gaming and anime RSS feeds."""
 
 from __future__ import annotations
@@ -11,10 +10,11 @@ import json
 import logging
 import os
 import re
+import sys
 import time
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from datetime import time as datetime_time
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -31,6 +31,28 @@ from urllib3.util.retry import Retry
 LOGGER = logging.getLogger("nextlevel")
 CAPTION_BODY_LIMIT = 700
 TRACKING_QUERY_KEYS = {"fbclid", "gclid", "mc_cid", "mc_eid"}
+
+
+def user_config_dir() -> Path:
+    """Return the per-user configuration directory used by the installed CLI."""
+    override = os.getenv("NEXTLEVEL_CONFIG_DIR", "").strip()
+    if override:
+        return Path(override).expanduser()
+    if os.name == "nt":
+        root = os.getenv("APPDATA") or str(Path.home() / "AppData" / "Roaming")
+        return Path(root) / "NextLevel"
+    if sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support" / "NextLevel"
+    root = os.getenv("XDG_CONFIG_HOME", "").strip()
+    return (Path(root).expanduser() if root else Path.home() / ".config") / "nextlevel"
+
+
+def default_env_file() -> Path:
+    explicit = os.getenv("NEXTLEVEL_ENV_FILE", "").strip()
+    if explicit:
+        return Path(explicit).expanduser()
+    local = Path.cwd() / ".env"
+    return local if local.is_file() else user_config_dir() / ".env"
 
 FEEDS_GAMING = (
     "https://www.pcgamer.com/rss/",
@@ -131,7 +153,7 @@ class Config:
 
     @classmethod
     def from_env(cls, *, dry_run: bool = False) -> Config:
-        load_dotenv()
+        load_dotenv(default_env_file(), override=False)
         timezone_name = os.getenv("TIMEZONE", "Europe/Warsaw").strip()
         try:
             pytz.timezone(timezone_name)
@@ -427,8 +449,8 @@ def within_hours(entry, hours: int, *, now: datetime | None = None) -> bool:
     timestamp = _entry_timestamp(entry)
     if timestamp is None:
         return True
-    current = now or datetime.now(timezone.utc)
-    published = datetime.fromtimestamp(timestamp, tz=timezone.utc)
+    current = now or datetime.now(UTC)
+    published = datetime.fromtimestamp(timestamp, tz=UTC)
     return current - published <= timedelta(hours=hours)
 
 
