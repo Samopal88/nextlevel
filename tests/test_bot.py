@@ -2,14 +2,15 @@ import json
 import tempfile
 import time
 import unittest
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
 
-import bot
 import pytz
 import requests
+
+import bot
 
 
 def test_config(**overrides):
@@ -78,7 +79,7 @@ class ContentTests(unittest.TestCase):
         entry = SimpleNamespace(
             published_parsed=time.strptime("2026-09-20 10:00:00", "%Y-%m-%d %H:%M:%S")
         )
-        now = datetime(2026, 9, 20, 11, 30, tzinfo=timezone.utc)
+        now = datetime(2026, 9, 20, 11, 30, tzinfo=UTC)
         self.assertTrue(bot.within_hours(entry, 2, now=now))
         self.assertFalse(bot.within_hours(entry, 1, now=now))
 
