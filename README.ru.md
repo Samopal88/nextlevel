@@ -22,6 +22,40 @@
 
 Нужны Python 3.11+ и Telegram-бот с правами администратора канала.
 
+### Установка как приложения
+
+Рекомендуемый способ — через [pipx](https://pipx.pypa.io/). Он ставит программу в отдельное окружение и добавляет системную команду `nextlevel`:
+
+Если `pipx` ещё не установлен, в Windows его можно один раз поставить командой `py -m pip install --user pipx`, а в Linux/macOS — через пакетный менеджер системы.
+
+```bash
+pipx install https://github.com/Samopal88/nextlevel/archive/refs/heads/main.zip
+nextlevel setup
+```
+
+Интерактивный мастер спросит токен от BotFather, ID канала, часовой пояс и время публикаций. Он без отправки постов проверит самого бота и наличие у него прав администратора, сохранит настройки отдельно от исходного кода и предложит включить автозапуск.
+
+В Telegram вручную нужны только два действия:
+
+1. Создать бота через [@BotFather](https://t.me/BotFather) и скопировать токен.
+2. Добавить этого бота администратором нужного канала с правом публикации.
+
+Основные команды:
+
+```bash
+nextlevel preview             # показать будущие посты, ничего не отправляя
+nextlevel once                # опубликовать одну подборку и завершиться
+nextlevel run                 # запустить планировщик в текущем терминале
+nextlevel check               # проверить сохранённые настройки
+nextlevel config-path         # показать путь к файлу настроек
+nextlevel autostart-enable    # включить фоновый автозапуск
+nextlevel autostart-disable   # удалить фоновый автозапуск
+```
+
+Обновление: `pipx upgrade nextlevel-telegram-bot`. Удаление: `pipx uninstall nextlevel-telegram-bot`.
+
+### Запуск из исходного кода
+
 ```bash
 git clone https://github.com/Samopal88/nextlevel.git
 cd nextlevel
@@ -41,6 +75,8 @@ python bot.py             # запустить постоянное распис
 ```
 
 В Windows PowerShell виртуальное окружение включается командой `.venv\Scripts\Activate.ps1`.
+
+Автозапуск установленного приложения поддерживает Планировщик заданий Windows, пользовательский сервис systemd в Linux и LaunchAgent в macOS. В обычном случае права администратора/root не требуются.
 
 ## Основные настройки
 
