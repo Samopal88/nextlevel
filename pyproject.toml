@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nextlevel-telegram-bot"
+version = "2.1.0"
+description = "Self-hosted Telegram autopublisher for gaming and anime news"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Samopal88" }]
+dependencies = [
+  "beautifulsoup4==4.15.0",
+  "feedparser==6.0.14",
+  "pyTelegramBotAPI==4.36.1",
+  "python-dotenv==1.2.3",
+  "pytz==2026.3.post1",
+  "requests==2.34.2",
+]
+
+[project.scripts]
+nextlevel = "cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Samopal88/nextlevel"
+Issues = "https://github.com/Samopal88/nextlevel/issues"
+
+[tool.setuptools]
+py-modules = ["bot", "cli"]
